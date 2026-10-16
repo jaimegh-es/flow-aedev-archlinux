@@ -55,13 +55,5 @@ has *Settings → Diagnostics → Save logs*.
 sudo pacman -Rns flow-desktop-beta-bin
 ```
 
-## One note if you ever rebuild it
-
-The binary looks for its `integrity.cjs` sidecar by walking up from `/proc/self/exe`.
-Upstream ships it somewhere that path never reaches, so this package puts the binary in
-`/usr/lib/flow-desktop/` and symlinks `/usr/bin/flow` to it — `/proc/self/exe` resolves
-symlinks, so the sidecar gets found. Don't "simplify" that back to a plain
-`/usr/bin/flow` or PO token minting silently stops working.  
-
 ## AI
 Made with free AI, tested and reviewed by human. :)
