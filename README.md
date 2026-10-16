@@ -3,14 +3,11 @@
     <img src="https://flow-tube.org/flow-icon.svg" alt="Flow logo" width="128" />
   </a>
 </p>
+<div align="center">
+<h1> Flow Desktop AEDEV on Arch Linux</h1>
+</div>
 
-# Flow Desktop AEDEV on Arch Linux
-
-Flow Desktop (`v0.1.0-beta2`) packaged for Arch.
-
-Upstream doesn't ship an Arch build — only `.AppImage`, `.deb` and `.rpm`. So I took
-their official `.deb` and repackaged it. Same 11 MB instead of the AppImage's 156 MB,
-because the `.deb` uses the system WebKitGTK instead of bundling its own copy.
+Flow, AEDEV's great invention, still does not have a version for arch linux, unless as of when this repo is created, so here I leave you the PKGBUILD to install it, AUR-style
 
 ## Install
 
@@ -28,16 +25,7 @@ If you prefer an interactive build step instead of the automatic install, run:
 makepkg -s -si
 ```
 
-## Update to a newer beta
-
-Edit `_pkgver` and the `sha256` in `PKGBUILD`, then `makepkg -s -si`.
-
-To get the checksum:
-
-```bash
-curl -sLO "https://github.com/Flow-Tube/Flow-Desktop/releases/download/v0.1.0-beta3/Flow_0.1.0-beta3_linux_amd64.deb"
-sha256sum Flow_0.1.0-beta3_linux_amd64.deb
-```
+The PKGBUILD downloads the latest Flow version from the Github repo!
 
 ## Use
 
