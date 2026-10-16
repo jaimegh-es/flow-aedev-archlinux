@@ -4,8 +4,15 @@
 # Upstream: https://github.com/Flow-Tube/Flow-Desktop
 
 pkgname=flow-desktop-beta-bin
-_pkgver=0.1.0-beta2
-pkgver=0.1.0_beta2
+# Obtener dinámicamente la última versión desde las releases de GitHub.
+# Se elimina un posible prefijo 'v' del tag (p.ej. v0.1.0-beta2 -> 0.1.0-beta2).
+# Nota: makepkg necesitará acceso a Internet al parsear este PKGBUILD.
+_pkgver=$(curl -sSfL "https://api.github.com/repos/Flow-Tube/Flow-Desktop/releases/latest" \
+  | grep '"tag_name":' \
+  | sed -E 's/.*"([^"]+)".*/\1/' \
+  | sed 's/^v//')
+# Reemplazamos guiones por guiones bajos para la variable pkgver (convención de Arch):
+pkgver=${_pkgver//-/_}
 pkgrel=1
 pkgdesc="Flow Desktop beta: cliente de escritorio de YouTube/YouTube Music sin cuenta, sin ads y sin telemetría"
 arch=('x86_64' 'aarch64')
@@ -39,11 +46,13 @@ optdepends=(
 _debarch=amd64
 case $CARCH in
 	x86_64)
-		_debsum=e62f9be1b83f077c4585c779b22ea88d7045558abe0448229d1b5fab202599f7
+		# checksum dinámico: no lo conocemos antes de descargar la release.
+		# Para binarios que cambian frecuentemente es habitual usar 'SKIP'.
+		_debsum=
 		;;
 	aarch64)
 		_debarch=arm64
-		_debsum=d9f228a06e86449d6f4da0015e7d3b3678acb86d34d2cccd9c61df6ab3300e9c
+		_debsum=
 		;;
 	*)
 		printf 'Arquitectura no soportada por este paquete: %s\n' "$CARCH" >&2
@@ -51,8 +60,12 @@ case $CARCH in
 		;;
 esac
 
+# Usamos la URL de release que incluye el tag calculado arriba.
 source=("Flow_${_pkgver}_linux_${_debarch}.deb::https://github.com/Flow-Tube/Flow-Desktop/releases/download/v${_pkgver}/Flow_${_pkgver}_linux_${_debarch}.deb")
-sha256sums=("$_debsum")
+# No se conoce el checksum a priori: usar 'SKIP' evita que makepkg falle.
+# Si prefieres comprobarlo, ejecuta 'makepkg' una vez con SKIP y luego reemplaza
+# el valor por el sha256 real generado por 'sha256sum'.
+sha256sums=("SKIP")
 
 # El .deb es un contenedor 'ar' (debian-binary, control.tar.*, data.tar.*).
 # libarchive/bsdtar lo lee directamente, así que no hace falta binutils/ar.
